@@ -69,4 +69,24 @@ $('#userForm').submit(function(e){
     });
 
 });
+$(".deleteUser").click(function(){
+  var user = $(this).data('id');
+  var modal = $(this).data('modal');
+  var token = "{{csrf_token()}}";
+  $.ajax({
+     url:"/admin/users/"+user,
+     type: 'DELETE',
+     data:{
+         "user"   :user,
+         "_token" :token,
+     },
+
+     succsse :function(response){
+            $("#success").addClass('alert alert-danger').html(response.message).fadeIn('slow');
+            $("#success").html(response.message).delay(5000).fadeOut('slow');
+            
+           
+     }
+  });
+});
 </script>

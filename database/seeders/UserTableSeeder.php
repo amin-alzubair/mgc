@@ -23,5 +23,6 @@ class UserTableSeeder extends Seeder
         ]);
 
         $user->attachRole('superadministrator');
+        \App\Models\User::factory()->count(50)->create();
     }
 }

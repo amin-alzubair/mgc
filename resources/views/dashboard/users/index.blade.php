@@ -42,13 +42,9 @@
         <div class="modal-content">
         <div class="modal-body">
          <span class="text-danger">هل تريد حذف {{$user->name}}؟</span>
-            <form action="{{route('users.delete',$user->id)}}" method="POST">
-
-            @csrf 
-            @method('DELETE')
                 <button type="button" class="btn btn-success" data-dismiss="modal">الغاء</button>
-                <button type="submit" class="btn btn-danger">حذف</button>
-            </form>
+                <button type="button" data-modal="delete-user-{{$user->id}}" data-id="{{$user->id}}" class="deleteUser btn btn-danger">حذف</button>
+            
         </div>
         </div>
     </div>

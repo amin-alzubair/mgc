@@ -28,7 +28,7 @@ class UesrMangeController extends Controller
     public function delete(User $user){
         $user->delete();
 
-        return redirect()->route('users.index')->with('success','تم حذف المستخدم  بنجاح');
+        return response()->json(['message'=>'تم حذف المستخدم  بنجاح','user'=>$user]);
 
     }
 }
