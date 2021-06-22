@@ -31,62 +31,103 @@
 <script src="{{ URL::asset('assets/js/custom.js') }}"></script>
 
 <script>
+ $(document).ready(function(){
 
-$('#userForm').submit(function(e){
-    e.preventDefault();
+        /*user opertions  */
+        $('#userForm').submit(function(e){
+            e.preventDefault();
 
-    let name =$("#name").val();
-    let email =$("#email").val();
-    let password =$("#password").val();
-    let password_confirmation =$("#password-confirm").val();
-    let _token = $("input[name=_token]").val();
-    $.ajax({
-        url: "/admin/users",
-        type:"POST",
-        data:{
-            name:name,
-            email:email,
-            password:password,
-            password_confirmation:password_confirmation,
-            _token:_token,
+            let name =$("#name").val();
+            let email =$("#email").val();
+            let password =$("#password").val();
+            let password_confirmation =$("#password-confirm").val();
+            let _token = $("input[name=_token]").val();
+            $.ajax({
+                url: "/admin/users",
+                type:"POST",
+                data:{
+                    name:name,
+                    email:email,
+                    password:password,
+                    password_confirmation:password_confirmation,
+                    _token:_token,
+                },
+                success :function(response){
+                    
+                    $("#add-category").modal('toggle');
+                    $("#success-modal").modal('show').find('.text-success').text(response.message);
+                    $("#success").html(response.message).delay(5000).fadeOut('slow');
+                    $("#userForm")[0].reset();
+                    closeModal('#success-modal');
+                },
+                error: function(response){
+                    $("#nameError").text(response.responseJSON.errors.name).addClass("text text-danger");
+                    $("#emailError").text(response.responseJSON.errors.email).addClass("text text-danger");
+                    $("#passwordError").text(response.responseJSON.errors.password).addClass("text text-danger");
+
+                }
+
+            });
+
+        });
+        $(".deleteUser").click(function(){
+        var user = $(this).data('id');
+        var token = "{{csrf_token()}}";
+        $.ajax({
+            url:"/admin/users/"+user,
+            type: 'DELETE',
+            data:{
+                "user"   :user,
+                "_token" :token,
+            },
+
+            success :function(response){
+                $("#delete-user-"+user).modal('toggle');
+                $("#success-modal").modal('show').find('.text-success').text(response.message);
+                closeModal('#success-modal');
+                    
+                
+            }
+        });
+        });
+        function closeModal(modalId){
+            setTimeout(() => {
+                $(modalId).modal('hide');
+            }, 5000);
         },
-        success :function(response){
-            
-            $("#add-category").modal('toggle');
-            $("#success").addClass('alert alert-success').html(response.message).fadeIn('slow');
-            $("#success").html(response.message).delay(5000).fadeOut('slow');
-            $("#userForm")[0].reset();
-            
 
-        },
-        error: function(response){
-            $("#nameError").text(response.responseJSON.errors.name).addClass("text text-danger");
-            $("#emailError").text(response.responseJSON.errors.email).addClass("text text-danger");
-            $("#passwordError").text(response.responseJSON.errors.password).addClass("text text-danger");
-
-        }
-
-    });
-
+        //Student opretions
 });
-$(".deleteUser").click(function(){
-  var user = $(this).data('id');
-  var modal = $(this).data('modal');
-  var token = "{{csrf_token()}}";
-  $.ajax({
-     url:"/admin/users/"+user,
-     type: 'DELETE',
-     data:{
-         "user"   :user,
-         "_token" :token,
-     },
+</script>
 
-     succsse :function(response){
-            $("#success").addClass('alert alert-danger').html(response.message).fadeIn('slow');
-            $("#success").html(response.message).delay(5000).fadeOut('slow');
-            
-           
-     }
-  });
-});
+<script>
+   $('#studenForm').submit(function(e){
+            e.preventDefault();
+
+            let studentName =$("#name").val();
+            let phoneNumber =$("#phoneNumber").val();
+            let email =$("#email").val();
+            let stage =498998;
+            let _token = "{{csrf_token()}}";
+
+            $.ajax({
+                url:"/student/store",
+                type : "POST",
+                data:{
+                    name : studentName,
+                    phone_number : phoneNumber,
+                    email : email,
+                    stage : stage,
+                    _token : _token,
+
+                },
+
+                success:function(response){
+                    console.log('ok');
+                }
+            });
+
+
+        });
+
 </script>
