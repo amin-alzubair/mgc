@@ -31,8 +31,6 @@
 <script src="{{ URL::asset('assets/js/custom.js') }}"></script>
 
 <script>
- $(document).ready(function(){
-
         /*user opertions  */
         $('#userForm').submit(function(e){
             e.preventDefault();
@@ -57,6 +55,7 @@
                     $("#add-category").modal('toggle');
                     $("#success-modal").modal('show').find('.text-success').text(response.message);
                     $("#success").html(response.message).delay(5000).fadeOut('slow');
+                    $('#myTable > tbody:last-child').append('<tr>'+'<th>'+response.user.id+'</th>'+'<td>'+response.user.name+'</td>'+'<td>'+response.user.email+'</td><button class="btn btn-danger"><i class="fa fa-times"></i></button></td>'+'</tr>');
                     $("#userForm")[0].reset();
                     closeModal('#success-modal');
                 },
@@ -84,6 +83,7 @@
             success :function(response){
                 $("#delete-user-"+user).modal('toggle');
                 $("#success-modal").modal('show').find('.text-success').text(response.message);
+                $("#tr-"+user).remove();
                 closeModal('#success-modal');
                     
                 
@@ -94,10 +94,10 @@
             setTimeout(() => {
                 $(modalId).modal('hide');
             }, 5000);
-        },
+        }
 
         //Student opretions
-});
+
 </script>
 
 <script>
@@ -111,7 +111,7 @@
             let _token = "{{csrf_token()}}";
 
             $.ajax({
-                url:"/student/store",
+                url:"{{route('student.store')}}",
                 type : "POST",
                 data:{
                     name : studentName,
@@ -123,11 +123,43 @@
                 },
 
                 success:function(response){
-                    console.log('ok');
+                    $("#add-category").modal('toggle');
+                    $("#success-modal").modal('show').find('.text-success').text(response.message);
+                    $("#success").html(response.message).delay(5000).fadeOut('slow');
+                    $("#studenForm")[0].reset();
+                    closeModal('#success-modal');
+                },
+                error: function(response){
+                    $("#nameError").text(response.responseJSON.errors.name).addClass("text text-danger");
+                    $("#emailError").text(response.responseJSON.errors.email).addClass("text text-danger");
+                    $("#phoneError").text(response.responseJSON.errors.phone_number).addClass("text text-danger");
+
                 }
             });
 
 
+        });
+
+        $(".deleteStudent").click(function(){
+        var student = $(this).data('id');
+        var token = "{{csrf_token()}}";
+        $.ajax({
+            url:"/student/destroy/"+student,
+            type: 'DELETE',
+            data:{
+                "student"   :student,
+                "_token" :token,
+            },
+
+            success :function(response){
+                $("#delete-student-"+student).modal('toggle');
+                $("#success-modal").modal('show').find('.text-success').text(response.message);
+                $("#tr-"+student).remove();
+                closeModal('#success-modal');
+                    
+                
+            }
+        });
         });
 
 </script>

@@ -27,7 +27,7 @@ class StudentController extends Controller
 
     public function destroy(Student $student){
         $student->delete();
-        return response()->jsone(['message'=>'تم حذف طالب بنجاح']);
+        return response()->json(['message'=>'تم حذف طالب بنجاح']);
 
     }
 }

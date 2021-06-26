@@ -12,7 +12,7 @@ class UesrMangeController extends Controller
     
     public function index(){
 
-        $users =User::select('id','name','email')->get();
+        $users =User::select('id','name','email')->paginate(5);
         return view('dashboard.users.index',compact('users'));
 
     }
@@ -22,7 +22,7 @@ class UesrMangeController extends Controller
         $data['password']=Hash::make($request->password);
         $user=User::create($data);
 
-        return response()->json(['message'=>'تم اضافة المستخدم  بنجاح']);
+        return response()->json(['message'=>'تم اضافة المستخدم  بنجاح','user'=>$user]);
     }
 
     public function delete(User $user){
